@@ -1,0 +1,10 @@
+[
+    {
+        "id"            : 111000111,
+        "password"      : "abcdef",
+        "name"          : "budi",
+        "address"       : "jakarta",
+        "join_date"     : "11-jul-2022",
+        "phone_number"  : 6281234567890
+    }
+]
