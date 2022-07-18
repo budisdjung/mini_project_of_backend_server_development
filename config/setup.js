@@ -1,28 +1,33 @@
-const merchantdb = require("../config/merchantdb");
-const productdb = require("../config/productdb")
+const db = require("../config/db");
 
 const createMerchant = `
     CREATE TABLE merchant (
-        id INTEGER PRIMARY KEY,
-        password VARCHAR NOT NULL,
-        name TEXT NOT NULL,
-        address TEXT NOT NULL,
-        join_date DATE DEFAULT CURRENT_DATE,
-        phone_number INTEGER NOT NULL
+        id              INTEGER PRIMARY KEY,
+        password        VARCHAR NOT NULL,
+        name            VARCHAR NOT NULL,
+        address         TEXT NOT NULL,
+        join_date       TEXT NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        phone_number    VARCHAR NOT NULL
     )
 `
 
 const createProduct = `
     CREATE TABLE product (
-        id INTEGER PRIMARY KEY,
-        name VARCHAR NOT NULL,
-        quantity INTEGER NOT NULL,
-        price INTEGER NOT NULL
+        id              INTEGER PRIMARY KEY,
+        merchant_id     INTEGER NOT NULL,
+        name            VARCHAR NOT NULL,
+        quantity        INTEGER NOT NULL,
+        price           INTEGER NOT NULL,
+        created_by      VARCHAR NOT NULL,
+        created_at      TEXT NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        updated_by      VARCHAR,
+        updated_at      TEXT DEFAULT (DATETIME('NOW', 'LOCALTIME')),
+        FOREIGN KEY (merchant_id) REFERENCES merchant (id)
     )
 `
 
-merchantdb.serialize(() => {
-    merchantdb.run(createMerchant, (err) => {
+db.serialize(() => {
+    db.run(createMerchant, (err) => {
         if (!err) {
             console.log('TABLE MERCHANT CREATED')
         }
@@ -32,8 +37,8 @@ merchantdb.serialize(() => {
     })
 })
 
-productdb.serialize(() => {
-    productdb.run(createProduct, (err) => {
+db.serialize(() => {
+    db.run(createProduct, (err) => {
         if (!err) {
             console.log('TABLE PRODUCT CREATED')
         }
