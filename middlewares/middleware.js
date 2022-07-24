@@ -1,5 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken')
+
 class Middleware {
     static checkAuth (req, res, next) {
         if (!req.headers || !req.headers.authorization) {
@@ -7,12 +8,14 @@ class Middleware {
         }
     
         const token = req.headers.authorization
-        const verifyToken = jwt.verify(token, process.env.SECRET)
-    
-        if (verifyToken) {
-            next()
+
+        let verifyToken = null
+        if(token) {
+            verifyToken = jwt.verify(token, 'shhhhh')
+            if (verifyToken) {
+                next()
+            }
         }
-        res.status(401).json({ message: 'Unauthorized'})
     }
 }
 

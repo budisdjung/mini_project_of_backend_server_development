@@ -3,12 +3,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 
-const merchantRouter = require('./routes/merchant');
-const productRouter = require('./routes/product')
+const routerMerchant = require('./routes/routerMerchant');
+const routerProduct = require('./routes/routerProduct');
 
 app.use(bodyParser.json());
-app.use('/merchant', merchantRouter);
-app.use('/product', productRouter);
+app.use('/merchant', routerMerchant);
+app.use('/product', routerProduct);
 
 app.listen(process.env.PORT, () => {
     console.log(`Listening to port ${process.env.PORT}`)
