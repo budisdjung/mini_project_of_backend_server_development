@@ -1,6 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken')
-const modelMerchant = require('../models/modelMerchant')
+const Merchant = require('../models/modelMerchant')
 
 class ControllerMerchant {
     static registerMerchant (req, res, next) {
@@ -8,17 +8,15 @@ class ControllerMerchant {
         if (!body.name) {
             res.status(400).json({ message: 'Invalid name'})
         }
-        merchant.registerMerchant(body, row => {
-            console.log(row)
-        })
-        res.status(201).json({ message: "Success create new data!"})
+        Merchant.registerMerchant(body)
+        res.status(201).json({ message: "Success create new merchant data!"})
     }
 
     static async login (req, res, next) {
         const body = req.body
-        const merchant = await modelMerchant.findMerchantByNameAndPassword(body.name, body.password)
+        const merchant = await Merchant.findMerchantByNameAndPassword(body.name, body.password)
         if (merchant && merchant.length != 0) {
-            const token = jwt.sign({ merchant }, 'shhhhh');
+            const token = jwt.sign({ merchant }, process.env.SECRET);
             res.status(200).json({ token })
         }
         else {
@@ -26,25 +24,13 @@ class ControllerMerchant {
         }
     }
 
-    static async loginPromise (req, res, next) {
-        // generate jwt token
-        const body = req.body // name, password
-        findUserByNameAndPassword(body.name, body.password)
-            .then(user => {
-            // for password BYCRPT --> npm install bycrpt
-                 if (user && user.length != 0) {
-                    // user found
-                    const token = jwt.sign({  // jwt.sign to convert variable user into token
-                            user
-                    }, 'shhhhh'); // secret better stored in .env
-                    res.status(200).json({ token })
-                } else {
-                    res.status(401).json({ message: 'Unauthorized'})
-                 }
-            })
-            .catch(err => {
-                res.status(500).json(err)
-            })
+    static deleteMerchant (req, res, next) {
+        const body = req.body
+        if (err) {
+            console.log(err)
+        }
+        Merchant.deleteMerchant(body)
+        res.status(200).json({ message: 'Success delete merchant data' })
     }
 }
 
